@@ -4,6 +4,8 @@ set -e
 
 # Configuration
 JAR_FILE_PATH="$1"
+SPRING_PROFILE="$2"
+SERVER_PORT="${3:-8080}"
 APP_NAME="inbound"
 APP_USER="root"
 SERVICE_NAME="${APP_NAME}.service"
@@ -11,7 +13,6 @@ APP_DIR="/etc/systemd/system"
 LOG_DIR="/var/log/${APP_NAME}"
 CONFIG_FILE="/etc/${APP_NAME}.conf"
 JVM_OPTS="-Xms512m -Xmx1024m -XX:+UseG1GC"
-SERVER_PORT="${2:-8080}"
 
 # Custom IP and port
 MY_IP="11.0.65.222"
@@ -33,11 +34,20 @@ error_exit() {
 
 # Validate input
 if [ -z "$JAR_FILE_PATH" ]; then
-  error_exit "No JAR file path provided. Usage: $0 <JAR_FILE_PATH> [PORT]"
+  error_exit "No JAR file path provided. Usage: $0 <JAR_FILE_PATH> <PROFILE> [PORT]"
 fi
 
 if [ ! -f "$JAR_FILE_PATH" ]; then
   error_exit "JAR file not found at provided path: $JAR_FILE_PATH"
+fi
+
+if [ -z "$SPRING_PROFILE" ]; then
+  error_exit "No Spring profile provided. Usage: $0 <JAR_FILE_PATH> <PROFILE> [PORT]. Valid profiles: dev, test, prod"
+fi
+
+# Validate Spring profile
+if [[ ! "$SPRING_PROFILE" =~ ^(dev|test|prod)$ ]]; then
+  error_exit "Invalid Spring profile: $SPRING_PROFILE. Valid profiles: dev, test, prod"
 fi
 
 if [ "$EUID" -ne 0 ]; then
@@ -137,10 +147,11 @@ create_app_config() {
   cat << EOF > "$CONFIG_FILE"
 # Application environment variables
 JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
-APP_ENV=production
+APP_ENV=$SPRING_PROFILE
 SERVER_PORT=$SERVER_PORT
 MY_IP=$MY_IP
 MY_PORT=$MY_PORT
+SPRING_PROFILE=$SPRING_PROFILE
 EOF
 
   chown "$APP_USER:$APP_USER" "$CONFIG_FILE"
@@ -161,7 +172,7 @@ After=network.target
 [Service]
 User=$APP_USER
 EnvironmentFile=$CONFIG_FILE
-ExecStart=/usr/bin/java ${JVM_OPTS} -jar ${JAR_FILE_PATH} --server.port=${SERVER_PORT}
+ExecStart=/usr/bin/java ${JVM_OPTS} -Dspring.profiles.active=${SPRING_PROFILE} -jar ${JAR_FILE_PATH} --server.port=${SERVER_PORT}
 SuccessExitStatus=143
 Restart=always
 RestartSec=10
@@ -229,7 +240,7 @@ main() {
   log "Starting application service..."
   systemctl restart "$SERVICE_NAME"
 
-  log "✅ Installation complete! Your application is now running on port $SERVER_PORT."
+  log "✅ Installation complete! Your application is now running on port $SERVER_PORT with profile $SPRING_PROFILE."
 
   echo -e "\n📌 **SYSTEMD COMMANDS YOU CAN USE:**"
   echo -e "--------------------------------------------"
