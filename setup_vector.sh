@@ -6,7 +6,7 @@ VECTOR_DEFAULT_PATH="/root/.vector/bin/vector"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 CONFIG_DIR="/etc/vector/$SERVICE_NAME"
 DATA_DIR="/var/lib/vector/$SERVICE_NAME"
-LOKI_IP="your-loki-ip"  # Replace with actual Loki IP
+LOKI_IP="11.0.70.82"  # Replace with actual Loki IP
 
 if [ "$ACTION" != "install" ] && [ "$ACTION" != "uninstall" ]; then
   echo "Error: First argument must be 'install' or 'uninstall'"
