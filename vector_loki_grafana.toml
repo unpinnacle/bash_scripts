@@ -1,0 +1,27 @@
+# Source: Read live logs from journalctl
+[sources.journal_logs]
+type = "journald"
+include_units = ["inbound.service"]
+
+[transforms.extract_message]
+type = "remap"
+inputs = ["journal_logs"]
+source = '''
+.message = to_string!(.message)
+
+if starts_with(.message, "{") {
+    . = parse_json!(.message)
+} else {
+    abort
+}
+'''
+
+[sinks.loki]
+type = "loki"
+inputs = ["extract_message"]
+endpoint = "http://11.0.70.82:3100"
+labels = { job = "vector" }
+encoding.codec = "json"
+
+# Add required labels
+labels = { source = "vector", service = "inbound"}

@@ -1,4 +1,4 @@
-# Exit immediately if a command exits with a non-zero status
+# sudo bash setup_loki_grafana.sh install/uninstall
 set -e
 
 # Function to install Loki and Grafana
