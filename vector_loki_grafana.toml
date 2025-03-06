@@ -1,7 +1,7 @@
 # Source: Read live logs from journalctl
 [sources.journal_logs]
 type = "journald"
-include_units = ["inbound.service"]
+include_units = ["processor.service"]
 
 [transforms.extract_message]
 type = "remap"
@@ -20,8 +20,5 @@ if starts_with(.message, "{") {
 type = "loki"
 inputs = ["extract_message"]
 endpoint = "http://11.0.70.82:3100"
-labels = { job = "vector" }
 encoding.codec = "json"
-
-# Add required labels
-labels = { source = "vector", service = "inbound"}
+labels = { source = "vector", service = "processor"}
