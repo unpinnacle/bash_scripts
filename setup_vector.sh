@@ -1,4 +1,3 @@
-#./setup_vector.sh install processor-logs vector_loki_grafana.toml
 ACTION=$1
 SERVICE_NAME=${2:-"connectors-logs"}  # Default service name if not provided
 TOML_FILES="${@:3}"  # All arguments after action & service name are TOML files

@@ -1,4 +1,3 @@
-# sudo bash setup_loki_grafana.sh install/uninstall
 set -e
 
 # Function to install Loki and Grafana
