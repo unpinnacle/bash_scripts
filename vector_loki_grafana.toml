@@ -19,6 +19,6 @@ if starts_with(.message, "{") {
 [sinks.loki]
 type = "loki"
 inputs = ["extract_message"]
-endpoint = "http://11.0.70.82:3100"
+endpoint = "http://<Server-Ip>:<Loki-Port>"
 encoding.codec = "json"
 labels = { source = "vector", service = "processor"}
