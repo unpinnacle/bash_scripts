@@ -1,11 +1,12 @@
+#./setup_vector.sh install processor-logs vector_loki_grafana.toml
 ACTION=$1
-SERVICE_NAME=${2:-"connectors-logs"}  # Default service name if not provided
+SERVICE_NAME=${2:-"connectors-logs"}  # Default service name if not provided (For Loki and Kibana use different Service name to avoid conflicts)
 TOML_FILES="${@:3}"  # All arguments after action & service name are TOML files
 VECTOR_DEFAULT_PATH="/root/.vector/bin/vector"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
 CONFIG_DIR="/etc/vector/$SERVICE_NAME"
 DATA_DIR="/var/lib/vector/$SERVICE_NAME"
-LOKI_IP="11.0.70.82"  # Replace with actual Loki IP
+STORAGE_IP="your-receiver-storage-server-ip"  
 
 if [ "$ACTION" != "install" ] && [ "$ACTION" != "uninstall" ]; then
   echo "Error: First argument must be 'install' or 'uninstall'"
@@ -34,7 +35,7 @@ if [ "$ACTION" == "install" ]; then
     systemctl restart "$SERVICE_NAME"
     systemctl enable "$SERVICE_NAME"
     echo "Service '$SERVICE_NAME' restarted and enabled."
-    echo "curl -s http://$LOKI_IP:3100/ready"
+    echo "curl -s http://$STORAGE_IP:3100/ready"
     exit 0
   fi
 
@@ -78,7 +79,7 @@ EOF
   systemctl start "$SERVICE_NAME"
 
   echo "Vector installed and service '$SERVICE_NAME' set up successfully with configs: $TOML_LIST"
-  echo "curl -s http://$LOKI_IP:3100/ready"
+  echo "curl -s http://$STORAGE_IP:3100/ready"
 fi
 
 if [ "$ACTION" == "uninstall" ]; then
@@ -89,5 +90,5 @@ if [ "$ACTION" == "uninstall" ]; then
   rm -rf "$CONFIG_DIR"
   rm -rf "$DATA_DIR"
   echo "Vector uninstalled and service '$SERVICE_NAME' removed."
-  curl -s http://$LOKI_IP:3100/ready
+  curl -s http://$STORAGE_IP:3100/ready
 fi

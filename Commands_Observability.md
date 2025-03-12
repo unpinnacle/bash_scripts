@@ -6,7 +6,8 @@
 - sudo bash setup_loki_grafana.sh install/uninstall
 
 ## setup_vector
-- ./setup_vector.sh install processor-logs vector_loki_grafana.toml
+- ./setup_vector.sh install <Service-Tool-Name> vector_loki_grafana.toml
+- EX :  ./setup_vector.sh install processor-elastic-logs vector_loki_grafana.toml
 
 ## setup_elastic_kibana
 - sudo ./setup_vector.sh install vector_elastic_kibana.toml

@@ -2,13 +2,11 @@
 type = "journald"
 include_units = ["inbound.service"]
 
-
 [transforms.extract_message_inbound]
 type = "remap"
 inputs = ["journal_logs_inbound"]
 source = '''
 .message = to_string!(.message)
-
 
 if starts_with(.message, "{") {
     . = parse_json!(.message)
@@ -17,17 +15,15 @@ if starts_with(.message, "{") {
 }
 '''
 
-
 [sinks.filtered_logs_inbound]
 type = "console"
 inputs = ["extract_message_inbound"]
 encoding.codec = "json"
 
-
 [sinks.elasticsearch_inbound]
 type = "elasticsearch"
 inputs = ["extract_message_inbound"]
-endpoints = ["http://<Server-Ip>:<Kibana-Port>"]  
+endpoints = ["http://<Server-Ip>:<Elastic-Port>"]  
 mode = "bulk"  
 
 [sinks.elasticsearch_inbound.bulk]
