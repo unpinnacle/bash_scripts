@@ -27,4 +27,4 @@ endpoints = ["http://<Server-Ip>:<Elastic-Port>"]
 mode = "bulk"  
 
 [sinks.elasticsearch_inbound.bulk]
-index = "vector-logs-inbound"  
+index = "connectors-logs"  
