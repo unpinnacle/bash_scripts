@@ -8,3 +8,4 @@ type = "file"
 inputs = ["incoming_logs"]
 path = "/root/downloads/logs/%Y-%m-%d.log"
 encoding.codec = "text"
+compression = "gzip"
