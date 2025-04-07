@@ -1,0 +1,10 @@
+[sources.incoming_logs]
+type = "socket"
+address = "0.0.0.0:8686"  # The same port specified in your sender config
+mode = "tcp"
+
+[sinks.local_files]
+type = "file"
+inputs = ["incoming_logs"]
+path = "/root/downloads/logs/%Y-%m-%d.log"
+encoding.codec = "text"
