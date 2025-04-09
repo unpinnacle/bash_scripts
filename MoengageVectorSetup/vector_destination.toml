@@ -1,11 +1,26 @@
 [sources.incoming_logs]
 type = "socket"
-address = "0.0.0.0:8686"  # The same port specified in your sender config
+address = "0.0.0.0:8686"
 mode = "tcp"
+
+[transforms.add_ip]
+type = "remap"
+inputs = ["incoming_logs"]
+source = '''
+.host_ip = .metadata.peer_ip
+'''
 
 [sinks.local_files]
 type = "file"
 inputs = ["incoming_logs"]
-path = "/root/downloads/logs/%Y-%m-%d.log"
+path = "/root/downloads/logs/%Y-%m-%d.gz"
 encoding.codec = "text"
 compression = "gzip"
+
+[sinks.ip_tracker]
+type = "file"
+inputs = ["add_ip"]
+path = "/root/downloads/logs/ip_tracker-%Y-%m-%d.gz"
+encoding.codec = "json"
+compression = "gzip"
+
