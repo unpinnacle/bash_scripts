@@ -1,0 +1,11 @@
+[sources.callback_logs]
+type = "socket"
+address = "0.0.0.0:8687"
+mode = "tcp"
+
+[sinks.local_files]
+type = "file"
+inputs = ["callback_logs"]  
+path = "/root/downloads/callback/logs/%Y-%m-%d.gz"
+encoding.codec = "text"
+compression = "gzip"
