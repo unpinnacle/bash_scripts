@@ -7,20 +7,12 @@ mode = "tcp"
 type = "remap"
 inputs = ["incoming_logs"]
 source = '''
-.host_ip = .metadata.peer_ip
+.host_ip = .host
 '''
 
 [sinks.local_files]
 type = "file"
-inputs = ["incoming_logs"]
+inputs = ["add_ip"]  
 path = "/root/downloads/logs/%Y-%m-%d.gz"
-encoding.codec = "text"
+encoding.codec = "json"  
 compression = "gzip"
-
-[sinks.ip_tracker]
-type = "file"
-inputs = ["add_ip"]
-path = "/root/downloads/logs/ip_tracker-%Y-%m-%d.gz"
-encoding.codec = "json"
-compression = "gzip"
-
