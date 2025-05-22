@@ -1,11 +1,13 @@
 [sources.log_files]
 type = "file"
 include = ["/home/Moengage-Consumer-v3/logs/debug/*", "/home/Moengage-Consumer-v3/logs/error/*"]
+exclude = ["*.json"]
 ignore_older_secs = 600
+read_from = "end"
 
 [sinks.destination_server]
-type = "socket" # Change to http, aws_s3, etc., if needed
+type = "socket"
 inputs = ["log_files"]
 address = "10.0.3.165:8688"
-mode = "tcp" # or udp
-encoding.codec = "text" # Send logs as JSON
+mode = "tcp"
+encoding.codec = "text"
