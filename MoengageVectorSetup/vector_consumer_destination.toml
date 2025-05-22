@@ -5,7 +5,7 @@ mode = "tcp"
 
 [sinks.local_files]
 type = "file"
-inputs = ["consumer_logs"]  
+inputs = ["consumer_logs"]
 path = "/root/moEngageLogs/consumer/%Y-%m-%d.gz"
 encoding.codec = "text"
 compression = "gzip"
