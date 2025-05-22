@@ -1,4 +1,4 @@
-[sources.incoming_logs]
+[sources.consumer_logs]
 type = "socket"
 address = "0.0.0.0:8688"
 mode = "tcp"
