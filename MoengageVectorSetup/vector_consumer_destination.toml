@@ -1,0 +1,11 @@
+[sources.consumer_logs]
+type = "socket"
+address = "0.0.0.0:8688"
+mode = "tcp"
+
+[sinks.local_files]
+type = "file"
+inputs = ["consumer_logs"]
+path = "/root/moEngageLogs/consumer/%Y-%m-%d.gz"
+encoding.codec = "text"
+compression = "gzip"

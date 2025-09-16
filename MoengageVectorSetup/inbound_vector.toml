@@ -1,0 +1,11 @@
+[sources.inbound_logs]
+type = "socket"
+address = "0.0.0.0:8686"
+mode = "tcp"
+
+[sinks.local_files]
+type = "file"
+inputs = ["inbound_logs"]  
+path = "/root/downloads/incoming/logs/%Y-%m-%d.gz"
+encoding.codec = "text"
+compression = "gzip"

@@ -1,0 +1,24 @@
+# Source: Read live logs from journalctl
+[sources.journal_logs]
+type = "journald"
+include_units = ["processor.service"]
+
+[transforms.extract_message]
+type = "remap"
+inputs = ["journal_logs"]
+source = '''
+.message = to_string!(.message)
+
+if starts_with(.message, "{") {
+    . = parse_json!(.message)
+} else {
+    abort
+}
+'''
+
+[sinks.loki]
+type = "loki"
+inputs = ["extract_message"]
+endpoint = "http://<Server-Ip>:<Loki-Port>"
+encoding.codec = "json"
+labels = { source = "vector", service = "processor"}

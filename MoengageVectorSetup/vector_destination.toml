@@ -1,0 +1,18 @@
+[sources.incoming_logs]
+type = "socket"
+address = "0.0.0.0:8686"
+mode = "tcp"
+
+[transforms.add_ip]
+type = "remap"
+inputs = ["incoming_logs"]
+source = '''
+.host_ip = .host
+'''
+
+[sinks.local_files]
+type = "file"
+inputs = ["add_ip"]  
+path = "/root/downloads/logs/%Y-%m-%d.gz"
+encoding.codec = "json"  
+compression = "gzip"

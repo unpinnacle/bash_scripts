@@ -1,0 +1,11 @@
+[sources.log_files]
+type = "file"
+include = ["/root/downloads/moengage-crm/moengage-relay/logs/debug/*", "/root/downloads/moengage-crm/moengage-relay/logs/error/*"]
+ignore_older_secs = 600
+
+[sinks.destination_server]
+type = "socket" # Change to http, aws_s3, etc., if needed
+inputs = ["log_files"]
+address = "11.0.71.168:8686"
+mode = "tcp" # or udp
+encoding.codec = "text" # Send logs as JSON
